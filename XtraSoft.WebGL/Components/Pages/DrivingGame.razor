@@ -1,0 +1,87 @@
+﻿@page "/driving"
+@layout EmptyLayout
+@rendermode InteractiveServer
+@using Microsoft.JSInterop
+@using XtraSoft.WebGL.Components.Layout
+@implements IAsyncDisposable
+
+<PageTitle>Driving Game</PageTitle>
+
+<div id="game-container" style="width: 100vw; height: 100vh; overflow: hidden; position: fixed; top: 0; left: 0; background: #222;">
+    <canvas id="driving-canvas" tabindex="0" 
+            style="width: 100%; height: 100%; display: block; outline: none;"></canvas>
+</div>
+
+<div id="loading-text" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-family: Arial; font-size: 24px; z-index: 200;">
+    Loading game...
+</div>
+
+<div style="position: fixed; top: 10px; left: 10px; color: white; font-family: Arial; text-shadow: 1px 1px 2px black; z-index: 100;">
+    <p style="margin: 0;">Controls: W/↑ = Forward, S/↓ = Brake/Reverse, A/← = Left, D/→ = Right</p>
+    <p style="margin: 0;">Click the canvas to enable keyboard controls</p>
+    <p style="margin: 5px 0 0 0;"><a href="/" style="color: #88f;">← Back to Home</a></p>
+    <p id="status-text" style="margin: 5px 0 0 0; color: #ff0;">Status: Initializing...</p>
+</div>
+
+@code {
+    [Inject] private IJSRuntime JS { get; set; } = default!;
+    
+    private IJSObjectReference? _module;
+    private IJSObjectReference? _gameRef;
+    private bool _isDisposed;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                await JS.InvokeVoidAsync("eval", "document.getElementById('status-text').innerText = 'Status: Loading module...'");
+                
+                // Import the game module
+                _module = await JS.InvokeAsync<IJSObjectReference>("import", "./webgl/drivingGame.mjs");
+                
+                await JS.InvokeVoidAsync("eval", "document.getElementById('status-text').innerText = 'Status: Module loaded, initializing game...'");
+                
+                // Initialize the game
+                _gameRef = await _module.InvokeAsync<IJSObjectReference>("initGame", "driving-canvas");
+                
+                await JS.InvokeVoidAsync("eval", "document.getElementById('status-text').innerText = 'Status: Game running!'");
+                await JS.InvokeVoidAsync("eval", "document.getElementById('loading-text').style.display = 'none'");
+                
+                // Focus the canvas
+                await JS.InvokeVoidAsync("eval", "document.getElementById('driving-canvas')?.focus()");
+            }
+            catch (Exception ex)
+            {
+                var safeMessage = ex.Message.Replace("'", "\\'").Replace("\n", " ").Replace("\r", "");
+                await JS.InvokeVoidAsync("eval", $"document.getElementById('status-text').innerText = 'Error: {safeMessage}'");
+                Console.WriteLine($"Error initializing game: {ex}");
+            }
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_isDisposed) return;
+        _isDisposed = true;
+
+        try
+        {
+            if (_module != null && _gameRef != null)
+            {
+                await _module.InvokeVoidAsync("disposeGame", _gameRef);
+            }
+            
+            if (_module != null)
+            {
+                await _module.DisposeAsync();
+            }
+        }
+        catch (JSDisconnectedException) { }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error disposing game: {ex.Message}");
+        }
+    }
+}

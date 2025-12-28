@@ -1,0 +1,110 @@
+﻿@using System.Security.Claims
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - XtraSoft.Web</title>
+    <script type="importmap"></script>    
+    <link href="~/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />  
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/lib/boxicons/css/boxicons.min.css" rel="stylesheet" />
+    <link href="~/css/styles2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/XtraSoft.Web.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">XtraSoft.Web</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Faq">@Localizer["FAQ"]</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Contact">@Localizer["Contact"]</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                    </ul>
+                    <partial name="_LocalPartial" />
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                        var defaultImage = Url.Content("~/images/default-user.png");
+                        <div class="header_img">
+                            <img src="@Url.Action("GetProfilePicture", "Account", new { userId })"
+                                 onerror="this.onerror=null;this.src='@defaultImage';" alt="User Image" width="25" height="25">
+                        </div>
+                    }
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container" style="padding-top: 80px;">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    <hr />
+    <footer class="footer bg-light text-dark py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>@Localizer["About Us"]</h5>
+                    <p>@Localizer["Quebec Iptv offers the best IPTV service with a wide range of channels and VOD content."]</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>@Localizer["Quick Links"]</h5>
+                    <ul class="list-unstyled">
+                        <li><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">@Localizer["Home"]</a></li>
+                        <li><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Faq">@Localizer["FAQ"]</a></li>
+                        <li><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Contact">@Localizer["Contact"]</a></li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li><a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Index">@Localizer["Dashboard"]</a></li>
+                        }
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>@Localizer["Follow Us"]</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="https://www.facebook.com/yourprofile" target="_blank"><i class="fa fa-facebook"></i> Facebook</a></li>
+                        <li><a href="https://www.twitter.com/yourprofile" target="_blank"><i class="fa fa-twitter"></i> Twitter</a></li>
+                        <li><a href="https://www.instagram.com/yourprofile" target="_blank"><i class="fa fa-instagram"></i> Instagram</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col text-center">
+                    &copy; @DateTime.Now.Year - XtraSoft.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">@Localizer["Privacy"]</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; @DateTime.Now.Year - XtraSoft.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <base href="~/" />
+    <component type="typeof(Microsoft.AspNetCore.Components.Web.HeadOutlet)" render-mode="ServerPrerendered" />
+    <script src="_framework/blazor.server.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

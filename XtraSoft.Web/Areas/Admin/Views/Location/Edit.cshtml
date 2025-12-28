@@ -1,0 +1,57 @@
+@model StringResource
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h4>StringResource</h4>
+<hr />
+<div class="row">
+    <div class="col-md-11">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="LanguageId" class="control-label"></label>
+                <select asp-for="LanguageId" class="form-control" asp-items="ViewBag.LanguageId"></select>
+                <span asp-validation-for="LanguageId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <textarea asp-for="Name" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Value" class="control-label"></label>
+                <textarea asp-for="Value" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="Value" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <button type="button" class="btn btn-secondary" id="translateButton">Translate</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<script>
+    document.getElementById('translateButton').addEventListener('click', function () {
+        var value = document.querySelector('input[name="Name"]').value;
+        var languageId = document.querySelector('select[name="LanguageId"]').value;
+        fetch('/Location/Translate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+            },
+            body: JSON.stringify({ value: value, languageId: languageId })
+        })
+            .then(response => response.json())
+            .then(data => {
+                document.querySelector('input[name="Value"]').value = data.translatedValue;
+            });
+    });
+</script>

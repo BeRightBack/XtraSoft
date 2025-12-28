@@ -1,0 +1,11 @@
+<Solution>
+  <Project Path="XtraSoft.Contracts/XtraSoft.Contracts.csproj" Id="4d6b52f3-de8e-4421-ad52-404861962cda" />
+  <Project Path="XtraSoft.Core/XtraSoft.Core.csproj" Id="d86e7ee3-56d2-4226-9372-e7d5ebef25a5" />
+  <Project Path="XtraSoft.Identity/XtraSoft.Identity.csproj" Id="a9602f76-dcbb-4b38-865b-24981116652a" />
+  <Project Path="XtraSoft.Infrastructure/XtraSoft.Infrastructure.csproj" Id="b184622f-c550-4de6-8d4e-9708e6669465" />
+  <Project Path="XtraSoft.Localization/XtraSoft.Localization.csproj" Id="87356016-73e1-4f94-bbb0-78b9eb75e629" />
+  <Project Path="XtraSoft.Razor/XtraSoft.Razor.csproj" Id="8dc67ede-2345-42c4-b9ef-1b26c06db586" />
+  <Project Path="XtraSoft.Services/XtraSoft.Services.csproj" Id="36a06ea2-7d28-4433-8d69-61134b9dc83e" />
+  <Project Path="XtraSoft.Web/XtraSoft.Web.csproj" Id="b1cc72fc-6332-4e8b-89f1-c82998499a2c" />
+  <Project Path="XtraSoft.WebGL/XtraSoft.WebGL.csproj" Id="0dce82bd-5824-41d8-9b60-811ac92a07bd" />
+</Solution>

@@ -1,0 +1,37 @@
+﻿@using XtraSoft.Core
+@using XtraSoft.Infrastructure
+@using XtraSoft.Services
+@inject BookService BookService
+@inject IGenericService<Book,ApplicationDbContext> GenericService
+
+<h2 class="bg-success text-white">Books-Pagination Test 2</h2>
+
+@if (allBooks is not null)
+{
+    <TTable entities="allBooks.ToList()" models="ModelList" />
+}
+else
+{
+    <p>Loading books...</p>
+}
+
+@code {
+    private IEnumerable<Book>? allBooks = null;
+    public List<string> ModelList { get; set; } = new() { "Title", "Author" };
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetBooks();
+    }
+
+    private async Task GetBooks()
+    {
+        allBooks = await GenericService.GetAllAsync();
+
+        if (!allBooks.Any())
+        {
+            BookService.AddRandomBooks(500);
+            allBooks = await GenericService.GetAllAsync();
+        }
+    }
+}

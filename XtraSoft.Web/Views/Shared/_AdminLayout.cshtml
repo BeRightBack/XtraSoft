@@ -1,0 +1,122 @@
+﻿@using System.Security.Claims
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <base href="~/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - XtraSoft.Web</title>
+    <link href="~/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/lib/boxicons/css/boxicons.min.css" rel="stylesheet" />
+    <link href="~/css/styles2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/XtraSoft.Web.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header class="header" id="header">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/Logos/logo-transparent-png.png" alt="Logo" />
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <div class="header_toggle" id="header-toggle"><i class='bx bx-menu'></i></div>
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">@Localizer["Home"]</a>
+                        </li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="Admin" asp-controller="Home" asp-action="Index">@Localizer["Dashboard"]</a>
+                            </li>
+                        }
+                    </ul>
+                    <partial name="_LocalPartial" />
+                    @if (User.Identity!.IsAuthenticated)
+                    {
+                        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                        var defaultImage = Url.Content("~/images/default-user.png");
+                        <div class="header_img">
+                            <img src="@Url.Action("GetProfilePicture", "Account", new { userId })"
+                                 onerror="this.onerror=null;this.src='@defaultImage';" alt="User Image" width="30" height="30">
+                        </div>
+                    }
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </nav>
+
+        <div class="l-navbar" id="nav-bar">
+            <nav class="nav">
+                <div>
+                    <a asp-area="" asp-controller="Admin" asp-action="Index" class="nav_logo">
+                        <i class='bx bx-layer nav_logo-icon'></i>
+                        <span class="nav_logo-name">Dashboard</span>
+                    </a>
+                    <div class="nav_list">
+                        <a asp-area="" asp-controller="User" asp-action="Index" class="nav_link dropdown-toggle" id="usersDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class='fa fa-users nav_icon'></i>
+                            <span class="nav_name">Users</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="usersDropdown">
+                            <li>
+                                <a class="dropdown-item" asp-area="Admin" asp-controller="User" asp-action="Index">All Users</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-area="Admin" asp-controller="User" asp-action="Create">Create User</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-area="Admin" asp-controller="Role" asp-action="Index">Roles</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-area="Admin" asp-controller="RoleAdmin" asp-action="Index">User Roles</a>
+                            </li>                            
+                        </ul>
+                        <a asp-area="Admin" asp-controller="Language" asp-action="Index" class="nav_link">
+                            <i class='fa fa-language nav_icon'></i>
+                            <span class="nav_name">Language</span>
+                        </a>
+                        <a asp-area="Admin" asp-controller="Localization" asp-action="Index" class="nav_link">
+                            <i class='fa fa-map-marker nav_icon'></i>
+                            <span class="nav_name">Localization</span>
+                        </a>
+                        <a asp-area="Admin" asp-controller="Location" asp-action="Index" class="nav_link">
+                            <i class='fa fa-globe nav_icon'></i>
+                            <span class="nav_name">Location</span>
+                        </a>                        
+                        <a asp-area="Admin" asp-controller="Admin" asp-action="Stats" class="nav_link">
+                            <i class='fa fa-line-chart nav_icon'></i>
+                            <span class="nav_name">Stats</span>
+                        </a>
+                    </div>
+                </div>
+                
+            </nav>
+        </div>
+    </header>
+    <div class="main-content" id="main-content">
+        <main role="main" class="main pb-3">
+            @RenderBody()
+        </main>
+
+        <footer class="border-top footer text-muted">
+            <div class="container">
+                &copy; @DateTime.Now.Year - XtraSoft.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">@Localizer["Privacy"]</a>
+            </div>
+        </footer>
+    </div>
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+
+

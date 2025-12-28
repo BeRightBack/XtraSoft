@@ -1,0 +1,64 @@
+﻿
+@implements IAsyncDisposable
+@rendermode InteractiveServer
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Local Server Time</h5>
+        <p class="card-text">
+            <strong>@CurrentTime.ToString("F")</strong>
+        </p>
+        <button type="button" class="btn btn-sm btn-outline-primary" @onclick="Refresh">Refresh now</button>
+    </div>
+</div>
+
+@code {
+    private DateTime CurrentTime = DateTime.Now;
+    private System.Threading.PeriodicTimer? _timer;
+    private System.Threading.CancellationTokenSource? _cts;
+
+    protected override void OnInitialized()
+    {
+        // start background periodic update (safe for Blazor Server)
+        _cts = new System.Threading.CancellationTokenSource();
+        _timer = new System.Threading.PeriodicTimer(TimeSpan.FromSeconds(1));
+        // fire-and-forget background loop — updates UI via InvokeAsync
+        _ = RunTimerLoopAsync(_cts.Token);
+    }
+
+    private async Task RunTimerLoopAsync(System.Threading.CancellationToken token)
+    {
+        try
+        {
+            while (await _timer!.WaitForNextTickAsync(token))
+            {
+                CurrentTime = DateTime.Now;
+                await InvokeAsync(StateHasChanged);
+            }
+        }
+        catch (OperationCanceledException) { }
+        catch (Exception) { /* swallow/log as appropriate */ }
+    }
+
+    private Task Refresh()
+    {
+        CurrentTime = DateTime.Now;
+        return InvokeAsync(StateHasChanged);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        try
+        {
+            _cts?.Cancel();
+            _timer?.Dispose();
+        }
+        catch { }
+        finally
+        {
+            _cts?.Dispose();
+        }
+
+        await Task.CompletedTask;
+    }
+}

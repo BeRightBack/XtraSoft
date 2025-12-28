@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
+		<PackageReference Include="ChartJSCore" Version="3.12.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.1">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>		<PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
+		<PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
+		<PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
+		<PackageReference Include="Serilog.Sinks.MySQL" Version="5.0.0" />
+		<PackageReference Include="System.Drawing.Common" Version="10.0.0" />
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="10.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- Project references so Web can call the AddXxx extension methods -->
+		<ProjectReference Include="..\XtraSoft.Contracts\XtraSoft.Contracts.csproj" />
+		<ProjectReference Include="..\XtraSoft.Infrastructure\XtraSoft.Infrastructure.csproj" />
+		<ProjectReference Include="..\XtraSoft.Razor\XtraSoft.Razor.csproj" />
+		<ProjectReference Include="..\XtraSoft.Services\XtraSoft.Services.csproj" />
+		<ProjectReference Include="..\XtraSoft.Localization\XtraSoft.Localization.csproj" />
+		<ProjectReference Include="..\XtraSoft.Identity\XtraSoft.Identity.csproj" />
+		<ProjectReference Include="..\XtraSoft.Core\XtraSoft.Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Areas\Admin\Data\" />
+	</ItemGroup>
+	
+</Project>

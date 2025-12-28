@@ -1,0 +1,6 @@
+@XtraSoft.Contracts_HostAddress = http://localhost:5018
+
+GET {{XtraSoft.Contracts_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
